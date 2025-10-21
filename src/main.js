@@ -1,38 +1,14 @@
 import * as three from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
+import { cubeMesh } from './utilities/cube'
+import { sphereMesh } from './utilities/sphere';
 
 const scene = new three.Scene()
 
-// creating cube
-const cubeGeometry = new three.BoxGeometry(1, 1, 1)
-const cubeMaterial = new three.MeshBasicMaterial({ color: 'purple', wireframe: true })
-const cubeMesh = new three.Mesh(
-  cubeGeometry,
-  cubeMaterial
-)
-cubeMesh.rotation.y = three.MathUtils.degToRad(45)
-// cubeMesh.rotation.reorder('XYZ')
-
-const cubeMesh2 = new three.Mesh(
-  cubeGeometry,
-  cubeMaterial
-)
-cubeMesh2.position.x = 2 // relative to the grp
-
-const cubeMesh3 = new three.Mesh(
-  cubeGeometry,
-  cubeMaterial
-)
-cubeMesh3.position.x = -2 // relative to the grp
-
 const group = new three.Group()
-group.add(cubeMesh, cubeMesh2, cubeMesh3)
-group.scale.y = 2 // applies to all children
-group.position.y = 2 // applies to all children
-scene.add(cubeMesh)
+group.add(cubeMesh, sphereMesh)
+// group.scale.y = 2
 scene.add(group)
-
 
 //axes
 const axesHelper = new three.AxesHelper(3)
@@ -48,6 +24,7 @@ const camera = new three.PerspectiveCamera(
 camera.position.z = 10
 scene.add(camera)
 
+// distance of cube to camera
 const distance = cubeMesh.position.distanceTo(camera.position)
 
 //creating render
@@ -60,11 +37,17 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true
 // controls.autoRotate = true
 render.setSize(window.innerWidth, window.innerHeight)
-// const maxPixelRatio = Math.min(window.devicePixelRatio, 2)
-// render.setPixelRatio(maxPixelRatio)
+
+const clock = new three.Clock()
+let previousTime = 0
 
 const renderLoop = () => {
-  controls.update()
+  const currentTime = clock.getElapsedTime()
+  const delta = currentTime - previousTime
+  previousTime = currentTime
+  cubeMesh.rotation.y += three.MathUtils.degToRad(1) * delta * 20
+
+  // controls.update()
   render.render(scene, camera)
   window.requestAnimationFrame(renderLoop)
 }
