@@ -1,10 +1,13 @@
 import * as three from 'three';
+import { shapesGroup } from './shapes';
+import { camera } from './camera';
 
 const scene = new three.Scene()
 // scene.background = new three.Color(0xffffff)
-
 // const fog = new three.Fog(0xffffff, 1, 10)
 // scene.fog = fog
+scene.add(shapesGroup)
+scene.add(camera)
 
 //light
 const light = new three.AmbientLight(0xffffff, 0.5)
