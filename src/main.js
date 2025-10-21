@@ -1,18 +1,13 @@
 import * as three from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { cubeMesh } from './utilities/cube'
-import { sphereMesh } from './utilities/sphere';
-
-const scene = new three.Scene()
+import { cubeMesh } from './objects/cube'
+import { sphereMesh } from './objects/sphere';
+import { cubeMesh2 } from './objects/cube-2';
+import { scene } from './scene';
 
 const group = new three.Group()
-group.add(cubeMesh, sphereMesh)
-// group.scale.y = 2
+group.add(cubeMesh, sphereMesh, cubeMesh2)
 scene.add(group)
-
-//axes
-const axesHelper = new three.AxesHelper(3)
-scene.add(axesHelper)
 
 // creating camera
 const camera = new three.PerspectiveCamera(
@@ -25,7 +20,7 @@ camera.position.z = 10
 scene.add(camera)
 
 // distance of cube to camera
-const distance = cubeMesh.position.distanceTo(camera.position)
+// const distance = cubeMesh.position.distanceTo(camera.position)
 
 //creating render
 const canvas = document.querySelector('.three')
