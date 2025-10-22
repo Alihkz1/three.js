@@ -1,8 +1,8 @@
 import * as three from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { cubeMesh } from './objects/shapes/cube'
 import { scene } from './objects/scene';
 import { camera } from './objects/camera';
+import { earth, moon, sun } from './objects/planets/sphere';
 
 //creating render
 const canvas = document.querySelector('.three')
@@ -21,20 +21,17 @@ window.addEventListener('resize', () => {
 })
 
 const clock = new three.Clock()
-let previousTime = 0
-
 const renderLoop = () => {
-  // scene.children.forEach((ch) => {
-  //   if (ch instanceof three.Group) {
-  //     ch.rotation.y += 0.01
-  //   }
-  // })
-  const currentTime = clock.getElapsedTime()
-  const delta = currentTime - previousTime
-  previousTime = currentTime
-  // cubeMesh.rotation.y += three.MathUtils.degToRad(1) * delta * 20
+  const elapsed = clock.getElapsedTime()
 
-  // controls.update()
+  earth.rotation.y += 0.01
+  earth.rotation.x = Math.sin(elapsed) * 10
+  earth.rotation.z = Math.cos(elapsed) * 10
+  
+  moon.rotation.x = Math.sin(elapsed) * 2
+  moon.rotation.z = Math.cos(elapsed) * 2
+
+  controls.update()
   render.render(scene, camera)
   window.requestAnimationFrame(renderLoop)
 }
