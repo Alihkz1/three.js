@@ -24,15 +24,15 @@ const clock = new three.Clock()
 let previousTime = 0
 
 const renderLoop = () => {
-  scene.children.forEach((ch) => {
-    if (ch instanceof three.Group) {
-      ch.rotation.y += 0.01
-    }
-  })
+  // scene.children.forEach((ch) => {
+  //   if (ch instanceof three.Group) {
+  //     ch.rotation.y += 0.01
+  //   }
+  // })
   const currentTime = clock.getElapsedTime()
   const delta = currentTime - previousTime
   previousTime = currentTime
-  cubeMesh.rotation.y += three.MathUtils.degToRad(1) * delta * 20
+  // cubeMesh.rotation.y += three.MathUtils.degToRad(1) * delta * 20
 
   // controls.update()
   render.render(scene, camera)
