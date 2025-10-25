@@ -2,9 +2,8 @@ import * as three from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { scene } from './objects/scene';
 import { camera } from './objects/camera';
-import { earth, moon, sun } from './objects/planets/sphere';
+import { initPlanets, PLANETS } from './objects/planets/sphere';
 
-//creating render
 const canvas = document.querySelector('.three')
 const render = new three.WebGLRenderer(
   { canvas, antialias: true },
@@ -20,21 +19,27 @@ window.addEventListener('resize', () => {
   render.setSize(window.innerWidth, window.innerHeight)
 })
 
-const clock = new three.Clock()
+initPlanets()
+
+const scenePlanets = scene.children.filter((c) => c.name != 'sun' && c instanceof three.Mesh)
+
 const renderLoop = () => {
-  const elapsed = clock.getElapsedTime()
+  scenePlanets.forEach((pl, index) => {
+    const planet = PLANETS[index]
+    pl.rotation.y += planet.speed
+    pl.rotation.x = Math.sin(pl.rotation.y) * PLANETS[index].distance
+    pl.rotation.z = Math.cos(pl.rotation.y) * PLANETS[index].distance
+    pl.children.forEach((moon, moonIndex) => {
+      moon.rotation.y += planet.moons[moonIndex].speed
+      moon.rotation.x = Math.sin(moon.rotation.y) * planet.moons[moonIndex].distance
+      moon.rotation.z = Math.cos(moon.rotation.y) * planet.moons[moonIndex].distance
+    })
+  })
 
-  earth.rotation.y += 0.01
-  earth.rotation.x = Math.sin(elapsed) * 10
-  earth.rotation.z = Math.cos(elapsed) * 10
-  
-  moon.rotation.x = Math.sin(elapsed) * 2
-  moon.rotation.z = Math.cos(elapsed) * 2
-
-  controls.update()
-  render.render(scene, camera)
-  window.requestAnimationFrame(renderLoop)
-}
+  controls.update();
+  render.render(scene, camera);
+  requestAnimationFrame(renderLoop);
+};
 
 
 renderLoop()

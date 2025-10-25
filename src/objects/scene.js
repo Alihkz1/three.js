@@ -1,6 +1,5 @@
 import * as three from 'three';
 import { camera } from './camera';
-import { earth, sun } from './planets/sphere';
 
 const scene = new three.Scene()
 // scene.background = new three.Color(0xffffff)
@@ -15,10 +14,10 @@ const scene = new three.Scene()
 // pointLight.position.set(2, 2, 2)
 // scene.add(pointLight)
 
-// //axes
-// const axesHelper = new three.AxesHelper(3)
-// scene.add(axesHelper)
+//axes
+const axesHelper = new three.AxesHelper(30)
+scene.add(axesHelper)
 
-scene.add(camera, sun, earth)
+scene.add(camera)
 
 export { scene }
