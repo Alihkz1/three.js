@@ -7,9 +7,6 @@ const camera = new three.PerspectiveCamera(
     0.01,
     100
 )
-camera.position.z = 25
-
-// distance of cube to camera
-// const distance = cubeMesh.position.distanceTo(camera.position)   
+camera.position.z = 40
 
 export { camera }

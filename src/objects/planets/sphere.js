@@ -3,32 +3,28 @@ import { scene } from '../scene'
 
 const sphereGeometry = new three.SphereGeometry(1, 32, 32)
 const textureLoader = new three.TextureLoader()
-const ambientLight = new three.AmbientLight(
-    0xffffff,
-    0.1,
-)
-// const directionalLight = new three.DirectionalLight(0xffffff, 1);
-// directionalLight.position.set(10, 10, 10);
-const pointLight = new three.PointLight(
-    0xffffff,
-    2
-)
-scene.add(pointLight, ambientLight)
-
-const backgroundTexture = textureLoader.load('/textures/2k_stars_milky_way.jpg')
-scene.background = backgroundTexture
+const directionalLight = new three.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(0, 0, 0);
 
 // sun
 const sunTexture = textureLoader.load('/textures/2k_sun.jpg')
-const sunMaterial = new three.MeshStandardMaterial(
-    {
-        map: sunTexture
-    }
-)
+const sunMaterial = new three.MeshStandardMaterial({
+    map: sunTexture,
+    roughness: 0.01,
+})
 const sun = new three.Mesh(sphereGeometry, sunMaterial)
 sun.scale.setScalar(5)
 sun.name = 'sun'
 scene.add(sun)
+
+// Add point light at the center (sun position)
+const sunLight = new three.PointLight(0xffffff, 50, 300, 1);
+sunLight.position.set(0, 0, 0);
+scene.add(sunLight);
+
+// Optional: Add ambient light for overall illumination
+const ambientLight = new three.AmbientLight(0x333333, 5);
+scene.add(ambientLight);
 
 // mars 
 const marsTexture = textureLoader.load('/textures/2k_mars.jpg')
@@ -63,7 +59,7 @@ const earthMaterial = new three.MeshStandardMaterial(
 )
 
 //moon
-const moonMaterial = new three.MeshBasicMaterial({
+const moonMaterial = new three.MeshStandardMaterial({
     map: textureLoader.load('/textures/2k_moon.jpg')
 })
 

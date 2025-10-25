@@ -15,26 +15,36 @@ controls.enableDamping = true
 
 render.setSize(window.innerWidth, window.innerHeight)
 
-window.addEventListener('resize', () => {
-  render.setSize(window.innerWidth, window.innerHeight)
-})
-
 initPlanets()
 
-const scenePlanets = scene.children.filter((c) => c.name != 'sun' && c instanceof three.Mesh)
+const scenePlanets = scene.children
+  .filter((c) => c.name != 'sun' && c instanceof three.Mesh)
+
 
 const renderLoop = () => {
+  
   scenePlanets.forEach((pl, index) => {
-    const planet = PLANETS[index]
-    pl.rotation.y += planet.speed
-    pl.rotation.x = Math.sin(pl.rotation.y) * PLANETS[index].distance
-    pl.rotation.z = Math.cos(pl.rotation.y) * PLANETS[index].distance
+    const planet = PLANETS[index];
+
+    // Orbit around global Y-axis
+    planet.angle = (planet?.angle ?? 0) + planet.speed;
+    pl.position.x = Math.sin(planet.angle) * planet.distance;
+    pl.position.z = Math.cos(planet.angle) * planet.distance;
+
+    // Optional: planet spinning around its own axis
+    pl.rotation.y += 0.01;
+
+    // Moon rotation/orbit around the planet
     pl.children.forEach((moon, moonIndex) => {
-      moon.rotation.y += planet.moons[moonIndex].speed
-      moon.rotation.x = Math.sin(moon.rotation.y) * planet.moons[moonIndex].distance
-      moon.rotation.z = Math.cos(moon.rotation.y) * planet.moons[moonIndex].distance
-    })
-  })
+      const moonData = planet.moons[moonIndex];
+      moonData.angle = (moonData.angle ?? 0) + moonData.speed;
+
+      moon.position.x = Math.sin(moonData.angle) * moonData.distance;
+      moon.position.z = Math.cos(moonData.angle) * moonData.distance;
+
+      moon.rotation.y += 0.02; // spin the moon itself
+    });
+  });
 
   controls.update();
   render.render(scene, camera);
